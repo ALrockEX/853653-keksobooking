@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Александр Пивачёв](https://up.htmlacademy.ru/javascript/16/user/853653).
-* Наставник: `Неизвестно`.
+* Наставник: `Александр`.
 
 ---
 
