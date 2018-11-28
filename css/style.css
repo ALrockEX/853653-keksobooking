@@ -1104,12 +1104,9 @@ fieldset {
 .popup__feature {
   display: inline-block;
   overflow: hidden;
-
   width: 30px;
   height: 28px;
-
   font-size: 0;
-
   background-image: url("../img/sprite-feature.svg");
   background-position: center;
   background-repeat: no-repeat;
