@@ -138,14 +138,19 @@ var renderCard = function () {
       mockOffer.address;
   cardElement.querySelector('.popup__text--price').textContent =
       mockOffer.price + '₽/ночь';
-  if (mockOffer.type === 'flat') {
-    cardElement.querySelector('.popup__type').textContent = 'Квартира';
-  } else if (mockOffer.type === 'bungalo') {
-    cardElement.querySelector('.popup__type').textContent = 'Бунгало';
-  } else if (mockOffer.type === 'house') {
-    cardElement.querySelector('.popup__type').textContent = 'Дом';
-  } else {
-    cardElement.querySelector('.popup__type').textContent = 'Дворец';
+  switch (mockOffer.type) {
+    case 'flat':
+      cardElement.querySelector('.popup__type').textContent = 'Квартира';
+      break;
+    case 'bungalo':
+      cardElement.querySelector('.popup__type').textContent = 'Бунгало';
+      break;
+    case 'house':
+      cardElement.querySelector('.popup__type').textContent = 'Дом';
+      break;
+    case 'palace':
+      cardElement.querySelector('.popup__type').textContent = 'Дворец';
+      break;
   }
   cardElement.querySelector('.popup__text--capacity').textContent =
       mockOffer.rooms +
