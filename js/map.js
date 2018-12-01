@@ -15,6 +15,11 @@ var pinTemplate = document.querySelector('#pin')
 var fragment = document.createDocumentFragment();
 var pinsListElement = map.querySelector('.map__pins');
 var cardTemplate = document.querySelector('#card').content;
+var pinMain = map.querySelector('.map__pin--main');
+var form = document.querySelector('.ad-form');
+var previosDisabledForms = form.getElementsByTagName('fieldset');
+var mapFilters = map.querySelector('.map__filters').children;
+
 var mockSimilarAnnouncements = [];
 var titles = [
   'Большая уютная квартира',
@@ -110,14 +115,15 @@ var mockGenerate = function (mockLength) {
 };
 var renderMapPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  var pinWidth = pinElement.getElementsByTagName('img')[0].width;
-  var pinHeight = pinElement.getElementsByTagName('img')[0].height;
+  var pinImage = pinElement.getElementsByTagName('img')[0];
+  var pinWidth = pinImage.width;
+  var pinHeight = pinImage.height;
 
   pinElement.style =
       'left: ' + (pin.location.x + pinWidth / 2) +
       'px; top: ' + (pin.location.y + pinHeight) + 'px;';
-  pinElement.getElementsByTagName('img')[0].src = pin.author.avatar;
-  pinElement.getElementsByTagName('img')[0].alt = pin.offer.title;
+  pinImage.src = pin.author.avatar;
+  pinImage.alt = pin.offer.title;
 
   return pinElement;
 };
@@ -188,11 +194,28 @@ var renderCard = function () {
       mockSimilarAnnouncements[0].author.avatar;
   map.insertBefore(cardElement, map.querySelector('.map__filters-container'));
 };
+var setDisableToElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('disabled', '');
+  }
+};
+var setAbleToElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
+};
 
-map.classList.remove('map--faded');
+setDisableToElements(previosDisabledForms);
+
+setDisableToElements(mapFilters);
 
 mockGenerate(lengthSimilarAnnouncements);
 
-renderMapPins();
-
-renderCard();
+pinMain.addEventListener('mouseup', function () {
+  setAbleToElements(previosDisabledForms);
+  setAbleToElements(mapFilters);
+  map.classList.remove('map--faded');
+  form.style.opacity = '1';
+  renderMapPins();
+  renderCard();
+});
