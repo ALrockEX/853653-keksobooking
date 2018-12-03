@@ -5,6 +5,8 @@ var roomsMin = 1;
 var roomsMax = 5;
 var pinMinY = 130;
 var pinRangeY = 630 - pinMinY;
+var pinMainWidth = 40;
+var pinMainHeight = 44;
 var limitRandomGuests = 100;
 var lowestPrice = 1000;
 var lengthPriceRange = 1000000 - lowestPrice;
@@ -29,6 +31,7 @@ var formSelectTimeIn = form.querySelector('#timein');
 var formSelectTimeOut = form.querySelector('#timeout');
 var formSelectRoomNumber = form.querySelector('#room_number');
 var formSelectCapacity = form.querySelector('#capacity');
+var formSetAddress = form.querySelector('#address');
 
 var mockSimilarAnnouncements = [];
 var minPrices = [0, 1000, 5000, 10000];
@@ -270,6 +273,7 @@ var onformSelectRoomNumberClick = function () {
 setDisableToElements(previosDisabledForms);
 setDisableToElements(mapFilters);
 mockGenerate(lengthSimilarAnnouncements);
+renderCard(card);
 
 formSelectType.addEventListener('click', onFormSelectTypeClick);
 formSelectTimeIn.addEventListener('click', onFormSelectTimeInClick);
@@ -281,13 +285,19 @@ pinMain.addEventListener('mouseup', function () {
   setAbleToElements(previosDisabledForms);
   setAbleToElements(mapFilters);
   map.classList.remove('map--faded');
+  var mapPins = renderMapPins();
 
   form.style.opacity = '1';
-  var mapPins = renderMapPins();
-  renderCard(card);
   for (var i = 0; i < mapPins.length; i++) {
     mapPins[i].addEventListener('click', function () {
       openCard();
     });
   }
+  formSetAddress.value = (parseInt(pinMain.style.left.slice(0, -2), 10) +
+    pinMainWidth / 2) + ', ' +
+    (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight);
+  console.log((parseInt(pinMain.style.left.slice(0, -2), 10) +
+    pinMainWidth / 2) + ', ' +
+    (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight));
+  formSetAddress.setAttribute('disabled', '');
 });
