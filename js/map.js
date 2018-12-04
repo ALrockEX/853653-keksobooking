@@ -5,6 +5,8 @@ var roomsMin = 1;
 var roomsMax = 5;
 var pinMinY = 130;
 var pinRangeY = 630 - pinMinY;
+var pinMainWidth = 40;
+var pinMainHeight = 44;
 var limitRandomGuests = 100;
 var lowestPrice = 1000;
 var lengthPriceRange = 1000000 - lowestPrice;
@@ -14,8 +16,25 @@ var pinTemplate = document.querySelector('#pin')
     .querySelector('.map__pin');
 var fragment = document.createDocumentFragment();
 var pinsListElement = map.querySelector('.map__pins');
-var cardTemplate = document.querySelector('#card').content;
+var cardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.map__card');
+var card = cardTemplate.cloneNode(true);
+var cardCloser = card.querySelector('.popup__close');
+var pinMain = map.querySelector('.map__pin--main');
+var form = document.querySelector('.ad-form');
+var previosDisabledForms = form.getElementsByTagName('fieldset');
+var inputPrice = form.querySelector('#price');
+var mapFilters = map.querySelector('.map__filters').children;
+var formSelectType = form.querySelector('#type');
+var formSelectTimeIn = form.querySelector('#timein');
+var formSelectTimeOut = form.querySelector('#timeout');
+var formSelectRoomNumber = form.querySelector('#room_number');
+var formSelectCapacity = form.querySelector('#capacity');
+var formSetAddress = form.querySelector('#address');
+
 var mockSimilarAnnouncements = [];
+var minPrices = [0, 1000, 5000, 10000];
 var titles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -110,25 +129,28 @@ var mockGenerate = function (mockLength) {
 };
 var renderMapPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  var pinWidth = pinElement.getElementsByTagName('img')[0].width;
-  var pinHeight = pinElement.getElementsByTagName('img')[0].height;
+  var pinImage = pinElement.getElementsByTagName('img')[0];
+  var pinWidth = pinImage.width;
+  var pinHeight = pinImage.height;
 
   pinElement.style =
       'left: ' + (pin.location.x + pinWidth / 2) +
       'px; top: ' + (pin.location.y + pinHeight) + 'px;';
-  pinElement.getElementsByTagName('img')[0].src = pin.author.avatar;
-  pinElement.getElementsByTagName('img')[0].alt = pin.offer.title;
+  pinImage.src = pin.author.avatar;
+  pinImage.alt = pin.offer.title;
 
   return pinElement;
 };
 var renderMapPins = function () {
+  var pins = [];
   for (var i = 0; i < mockSimilarAnnouncements.length; i++) {
-    fragment.appendChild(renderMapPin(mockSimilarAnnouncements[i]));
+    pins[i] = renderMapPin(mockSimilarAnnouncements[i]);
+    fragment.appendChild(pins[i]);
   }
   pinsListElement.appendChild(fragment);
+  return pins;
 };
-var renderCard = function () {
-  var cardElement = cardTemplate.cloneNode(true);
+var renderCard = function (cardElement) {
   var featuresElement = cardElement.querySelector('.popup__features');
   var mockOffer = mockSimilarAnnouncements[0].offer;
 
@@ -187,12 +209,95 @@ var renderCard = function () {
   cardElement.querySelector('.popup__avatar').src =
       mockSimilarAnnouncements[0].author.avatar;
   map.insertBefore(cardElement, map.querySelector('.map__filters-container'));
+  card.classList.add('hidden');
+};
+var setDisableToElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('disabled', '');
+  }
+};
+var setAbleToElements = function (elements) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
+};
+var openCard = function () {
+  card.classList.remove('hidden');
+  cardCloser.addEventListener('click', onCardCloserClick);
+};
+var onCardCloserClick = function () {
+  card.classList.add('hidden');
+  cardCloser.removeEventListener('click', onCardCloserClick);
+};
+var onFormSelectTypeClick = function () {
+  inputPrice.setAttribute('min',
+      '' + minPrices[formSelectType.selectedIndex]);
+  inputPrice.setAttribute('placeholder',
+      '' + minPrices[formSelectType.selectedIndex]);
+};
+var onFormSelectTimeInClick = function () {
+  for (var i = 0; i < formSelectTimeOut.options; i++) {
+    formSelectTimeOut.options[i].
+    selected = false;
+  }
+  formSelectTimeOut.options[formSelectTimeIn.selectedIndex].
+    selected = true;
+};
+var onFormSelectTimeOutClick = function () {
+  for (var i = 0; i < formSelectTimeIn.options; i++) {
+    formSelectTimeIn.options[i].
+    selected = false;
+  }
+  formSelectTimeIn.options[formSelectTimeOut.selectedIndex].
+    selected = true;
+};
+var onformSelectRoomNumberClick = function () {
+  var roomNumber = formSelectRoomNumber.selectedIndex;
+  var start = formSelectCapacity.options.length - 2;
+  for (var i = 0;
+    i < formSelectCapacity.options.length; i++) {
+    formSelectCapacity.options[i].setAttribute('disabled', '');
+    formSelectCapacity.options[i].selected = false;
+  }
+  if (roomNumber !== formSelectCapacity.options.length - 1) {
+    formSelectCapacity.options[start - roomNumber].selected = true;
+    for (i = start; i >= start - roomNumber; i--) {
+      formSelectCapacity.options[i].removeAttribute('disabled');
+    }
+  } else {
+    formSelectCapacity.options[roomNumber].selected = true;
+    formSelectCapacity.options[roomNumber].removeAttribute('disabled');
+  }
 };
 
-map.classList.remove('map--faded');
-
+setDisableToElements(previosDisabledForms);
+setDisableToElements(mapFilters);
 mockGenerate(lengthSimilarAnnouncements);
+renderCard(card);
 
-renderMapPins();
+formSelectType.addEventListener('click', onFormSelectTypeClick);
+formSelectTimeIn.addEventListener('click', onFormSelectTimeInClick);
+formSelectTimeOut.addEventListener('click', onFormSelectTimeOutClick);
+formSelectRoomNumber.addEventListener('click',
+    onformSelectRoomNumberClick);
 
-renderCard();
+pinMain.addEventListener('mouseup', function () {
+  setAbleToElements(previosDisabledForms);
+  setAbleToElements(mapFilters);
+  map.classList.remove('map--faded');
+  var mapPins = renderMapPins();
+
+  form.style.opacity = '1';
+  for (var i = 0; i < mapPins.length; i++) {
+    mapPins[i].addEventListener('click', function () {
+      openCard();
+    });
+  }
+  formSetAddress.value = (parseInt(pinMain.style.left.slice(0, -2), 10) +
+    pinMainWidth / 2) + ', ' +
+    (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight);
+  console.log((parseInt(pinMain.style.left.slice(0, -2), 10) +
+    pinMainWidth / 2) + ', ' +
+    (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight));
+  formSetAddress.setAttribute('disabled', '');
+});
