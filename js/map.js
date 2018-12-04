@@ -23,7 +23,7 @@ var card = cardTemplate.cloneNode(true);
 var cardCloser = card.querySelector('.popup__close');
 var pinMain = map.querySelector('.map__pin--main');
 var form = document.querySelector('.ad-form');
-var previosDisabledForms = form.getElementsByTagName('fieldset');
+var previosDisabledForms = form.querySelectorAll('fieldset');
 var inputPrice = form.querySelector('#price');
 var mapFilters = map.querySelector('.map__filters').children;
 var formSelectType = form.querySelector('#type');
@@ -32,6 +32,9 @@ var formSelectTimeOut = form.querySelector('#timeout');
 var formSelectRoomNumber = form.querySelector('#room_number');
 var formSelectCapacity = form.querySelector('#capacity');
 var formSetAddress = form.querySelector('#address');
+var formInputs = form.querySelectorAll('input');
+var formSelects = form.querySelectorAll('select');
+var formSubmit = form.querySelector('.ad-form__submit');
 
 var mockSimilarAnnouncements = [];
 var minPrices = [0, 1000, 5000, 10000];
@@ -229,6 +232,35 @@ var onCardCloserClick = function () {
   card.classList.add('hidden');
   cardCloser.removeEventListener('click', onCardCloserClick);
 };
+var showInvalid = function () {
+  for (var i = 0; i < formInputs.length; i++) {
+    if (!formInputs[i].validity.valid) {
+      formInputs[i].style.border = '5px solid red';
+      resetValidityLaunch(formInputs[i]);
+    }
+  }
+  for (i = 0; i < formSelects.length; i++) {
+    if (!formSelects[i].validity.valid) {
+      formSelects[i].style.border = '5px solid red';
+      resetValidityLaunch(formSelects[i]);
+    }
+  }
+};
+var resetValidityLaunch = function (field) {
+  var onFieldClick = function () {
+    resetValidity();
+    field.removeEventListener('click', onFieldClick);
+  };
+  field.addEventListener('click', onFieldClick);
+};
+var resetValidity = function () {
+  for (var i = 0; i < formInputs.length; i++) {
+    formInputs[i].removeAttribute('style');
+  }
+  for (i = 0; i < formSelects.length; i++) {
+    formSelects[i].removeAttribute('style');
+  }
+};
 var onFormSelectTypeClick = function () {
   inputPrice.setAttribute('min',
       '' + minPrices[formSelectType.selectedIndex]);
@@ -254,8 +286,7 @@ var onFormSelectTimeOutClick = function () {
 var onformSelectRoomNumberClick = function () {
   var roomNumber = formSelectRoomNumber.selectedIndex;
   var start = formSelectCapacity.options.length - 2;
-  for (var i = 0;
-    i < formSelectCapacity.options.length; i++) {
+  for (var i = 0; i < formSelectCapacity.options.length; i++) {
     formSelectCapacity.options[i].setAttribute('disabled', '');
     formSelectCapacity.options[i].selected = false;
   }
@@ -281,6 +312,11 @@ formSelectTimeOut.addEventListener('click', onFormSelectTimeOutClick);
 formSelectRoomNumber.addEventListener('click',
     onformSelectRoomNumberClick);
 
+formSubmit.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  showInvalid();
+});
+
 pinMain.addEventListener('mouseup', function () {
   setAbleToElements(previosDisabledForms);
   setAbleToElements(mapFilters);
@@ -296,8 +332,5 @@ pinMain.addEventListener('mouseup', function () {
   formSetAddress.value = (parseInt(pinMain.style.left.slice(0, -2), 10) +
     pinMainWidth / 2) + ', ' +
     (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight);
-  console.log((parseInt(pinMain.style.left.slice(0, -2), 10) +
-    pinMainWidth / 2) + ', ' +
-    (parseInt(pinMain.style.top.slice(0, -2), 10) + pinMainHeight));
   formSetAddress.setAttribute('disabled', '');
 });
