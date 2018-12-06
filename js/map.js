@@ -295,7 +295,6 @@ var onformSelectRoomNumberClick = function () {
   }
 };
 
-// Это хвост
 var onFormResetClick = function () {
   setDisableToElements(previosDisabledForms);
   setDisableToElements(mapFilters);
