@@ -1,35 +1,60 @@
 'use strict';
 (function () {
 
-  var inputPrice = window.util.form.querySelector('#price');
+  var initialyTimeIndex = 0;
+  var initialyTypeIndex = 1;
+  var initialyRoomNumberIndex = 0;
   var minPrices = [0, 1000, 5000, 10000];
+  var inputPrice = window.util.form.querySelector('#price');
   var formSelectTimeIn = window.util.form.querySelector('#timein');
   var formSelectTimeOut = window.util.form.querySelector('#timeout');
   var formSelectType = window.util.form.querySelector('#type');
   var formSelectRoomNumber = window.util.form.querySelector('#room_number');
   var formSelectCapacity = window.util.form.querySelector('#capacity');
+  var features = window.util.form.querySelectorAll('.feature__checkbox');
+  var description = window.util.form.querySelector('#description');
+
+  var chooseSelect = function (selector, index) {
+    for (var i = 0; i < selector.options.length; i++) {
+      selector.options[i].selected = false;
+    }
+    selector.options[index].selected = true;
+  };
+
+  var resetForm = function () {
+    for (var i = 0; i < window.util.formInputs.length; i++) {
+      window.util.formInputs[i].value = '';
+    }
+
+    for (i = 0; i < features.length; i++) {
+      features[i].checked = false;
+    }
+
+    description.value = '';
+
+    chooseSelect(formSelectTimeIn, initialyTimeIndex);
+    chooseSelect(formSelectTimeOut, formSelectTimeIn.selectedIndex);
+
+    chooseSelect(formSelectRoomNumber, initialyRoomNumberIndex);
+    onformSelectRoomNumberClick();
+
+    chooseSelect(formSelectType, initialyTypeIndex);
+    onFormSelectTypeClick();
+  };
+
+  var onFormSelectTimeInClick = function () {
+    chooseSelect(formSelectTimeOut, formSelectTimeIn.selectedIndex);
+  };
+
+  var onFormSelectTimeOutClick = function () {
+    chooseSelect(formSelectTimeIn, formSelectTimeOut.selectedIndex);
+  };
 
   var onFormSelectTypeClick = function () {
     inputPrice.setAttribute('min',
         '' + minPrices[formSelectType.selectedIndex]);
     inputPrice.setAttribute('placeholder',
         '' + minPrices[formSelectType.selectedIndex]);
-  };
-
-  var synchronizeSelect = function (thisElement, withElement) {
-    for (var i = 0; i < thisElement.options.length; i++) {
-      thisElement.options[i].selected = false;
-    }
-    thisElement.options[withElement.selectedIndex].
-      selected = true;
-  };
-
-  var onFormSelectTimeInClick = function () {
-    synchronizeSelect(formSelectTimeOut, formSelectTimeIn);
-  };
-
-  var onFormSelectTimeOutClick = function () {
-    synchronizeSelect(formSelectTimeIn, formSelectTimeOut);
   };
 
   var onformSelectRoomNumberClick = function () {
@@ -60,6 +85,16 @@
     evt.preventDefault();
     window.showInvalid(window.util.formInputs);
     window.showInvalid(window.util.formSelects);
+    if (window.util.allValid) {
+      window.backend.save(new FormData(window.util.form),
+          window.requestDisplay.onSave,
+          window.requestDisplay.onError);
+
+    }
   });
+
+  window.selectors = {
+    reset: resetForm
+  };
 
 })();
