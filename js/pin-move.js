@@ -3,7 +3,6 @@
 
   var pinMainWidth = 65;
   var pinMainHeight = 44;
-  var formSetAddress = window.util.form.querySelector('#address');
 
   window.util.pinMain.addEventListener('mousedown', function (evt) {
 
@@ -16,8 +15,7 @@
 
     var onMouseMove = function (moveEvt) {
       if (!window.util.dragged) {
-        window.activatePage();
-        console.log('Функция:\n' + window.activatePage);
+        window.page.activate();
       }
 
       window.util.dragged = true;
@@ -51,18 +49,18 @@
       } else {
         window.util.pinMain.style.top = window.util.pinMaxY - pinMainHeight + 'px';
       }
-      formSetAddress.value = (window.util.pinMain.offsetLeft + pinMainWidth / 2) +
+      window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + pinMainWidth / 2) +
         ', ' + (window.util.pinMain.offsetTop + pinMainHeight);
     };
 
     var onMouseUp = function () {
       if (!window.util.dragged) {
-        window.activatePage();
-        formSetAddress.value = (window.util.pinMain.offsetLeft + pinMainWidth / 2) +
+        window.page.activate();
+        window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + pinMainWidth / 2) +
           ', ' + (window.util.pinMain.offsetTop + pinMainHeight);
       }
 
-      formSetAddress.setAttribute('disabled', '');
+      window.util.formSetAddress.setAttribute('disabled', '');
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
