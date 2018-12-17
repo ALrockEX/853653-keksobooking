@@ -24,11 +24,11 @@
 
   var displayUpdate = function () {
     var oldCard;
-    while (window.util.pinsListElement.lastChild) {
+    for (var i = window.util.pinsListElement.children.length - 1; i > 1; i--) {
       window.util.pinsListElement
-          .removeChild(window.util.pinsListElement.lastChild);
+          .removeChild(window.util.pinsListElement.children[i]);
     }
-    for (var i = 0; i < window.util.mapPins.length; i++) {
+    for (i = 0; i < window.util.mapPins.length; i++) {
       window.util.fragmentPins.appendChild(window.util.mapPins[i]);
       window.util.fragmentCards.appendChild(window.util.cards[i]);
       oldCard = window.util.map
