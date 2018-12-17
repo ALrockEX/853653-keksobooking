@@ -49,14 +49,14 @@
       } else {
         window.util.pinMain.style.top = window.util.pinMaxY - PIN_MAIN_HEIGHT + 'px';
       }
-      window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + PIN_MAIN_WIDTH / 2) +
+      window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + Math.round(PIN_MAIN_WIDTH / 2)) +
         ', ' + (window.util.pinMain.offsetTop + PIN_MAIN_HEIGHT);
     };
 
     var onMouseUp = function () {
       if (!window.util.dragged) {
         window.page.activate();
-        window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + PIN_MAIN_WIDTH / 2) +
+        window.util.formSetAddress.value = (window.util.pinMain.offsetLeft + Math.round(PIN_MAIN_WIDTH / 2)) +
           ', ' + (window.util.pinMain.offsetTop + PIN_MAIN_HEIGHT);
       }
 

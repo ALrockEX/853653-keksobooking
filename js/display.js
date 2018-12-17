@@ -4,10 +4,12 @@
   var onMapPinClick = function () {
     if (window.util.indexOpen !== undefined) {
       onCardCloserClick();
+      window.util.mapPins[window.util.indexOpen].classList.remove('map__pin--active');
     }
     for (var i = 0; i < window.util.mapPins.length; i++) {
       if (window.util.mapPins[i] ===
-        window.util.pinsListElement.querySelector('.map__pin:active')) {
+        window.util.pinsListElement.querySelector('.map__pin:focus')) {
+        window.util.mapPins[i].classList.add('map__pin--active');
         window.util.cards[i].classList.remove('hidden');
         window.util.cards[i].querySelector('.popup__close')
           .addEventListener('click', onCardCloserClick);
