@@ -1,12 +1,12 @@
 'use strict';
 (function () {
 
-  var lowestPrice = 1000;
-  var lengthPriceRange = 1000000 - lowestPrice;
-  var roomsMin = 1;
-  var roomsMax = 5;
-  var limitRandomGuests = 100;
-  var lengthSimilarAnnouncements = 8;
+  var LOWEST_PRICE = 1000;
+  var LENGTH_PRICE_RANGE = 1000000 - LOWEST_PRICE;
+  var ROOMS_MIN = 1;
+  var ROOMS_MAX = 5;
+  var LIMIT_RANDOM_GUESTS = 100;
+  var LENGTH_SIMILAR_ANNOUNCEMENTS = 8;
 
   var mockSimilarAnnouncements = [];
   var titles = [
@@ -88,10 +88,10 @@
         offer: {
           title: titles[i],
           address: locationX + ', ' + locationY,
-          price: lowestPrice + Math.floor(Math.random() * lengthPriceRange),
+          price: LOWEST_PRICE + Math.floor(Math.random() * LENGTH_PRICE_RANGE),
           type: types[Math.floor(Math.random() * types.length)],
-          rooms: roomsMin + Math.floor(Math.random() * roomsMax),
-          guests: Math.floor(Math.random() * limitRandomGuests),
+          rooms: ROOMS_MIN + Math.floor(Math.random() * ROOMS_MAX),
+          guests: Math.floor(Math.random() * LIMIT_RANDOM_GUESTS),
           checkin: checkins[Math.floor(Math.random() * checkins.length)],
           checkout: checkouts[Math.floor(Math.random() * checkouts.length)],
           features: makeSet(posibleFeaturesUtil),
@@ -106,7 +106,7 @@
     }
   };
 
-  mockGenerate(lengthSimilarAnnouncements);
+  mockGenerate(LENGTH_SIMILAR_ANNOUNCEMENTS);
   window.mock = {
     similars: mockSimilarAnnouncements,
     posibleFeatures: posibleFeaturesUtil

@@ -11,6 +11,13 @@
     window.util.success.classList.add('hidden');
   };
 
+  var cardClose = function () {
+    if (window.util.indexOpen !== undefined) {
+      window.display.onCardCloser();
+      window.util.indexOpen = undefined;
+    }
+  };
+
   var activatePage = function () {
     window.util.setAbleToElements(window.util.previosDisabledForms);
     window.util.setAbleToElements(window.util.mapFilters);
@@ -18,11 +25,11 @@
     window.util.form.style.opacity = '1';
 
     if (!window.util.resetted) {
-      window.backend.load(window.requestDisplay.onLoad,
-          window.requestDisplay.onError);
+      window.backend.load(window.request.onLoad,
+          window.request.onError);
     } else {
       for (var i = 0; i < window.util.mapPins.length; i++) {
-        window.util.mapPins[i].addEventListener('click', window.requestDisplay.onMapPin);
+        window.util.mapPins[i].addEventListener('click', window.display.onMapPin);
         window.util.mapPins[i].classList.remove('hidden');
       }
     }
@@ -33,9 +40,7 @@
     window.util.setDisableToElements(window.util.previosDisabledForms);
     window.util.setDisableToElements(window.util.mapFilters);
     window.util.map.classList.add('map--faded');
-    if (window.requestDisplay.indexOpened !== undefined) {
-      window.requestDisplay.onCardCloser();
-    }
+    cardClose();
     window.util.form.removeAttribute('style');
     window.util.dragged = false;
     window.util.resetted = true;
@@ -44,8 +49,8 @@
     window.util.pinMain.style.top = pinMainFirstY + 'px';
 
     for (var i = 0; i < window.util.mapPins.length; i++) {
-      window.util.mapPins[i].removeEventListener('click', window.requestDisplay.onMapPin);
-      window.util.mapPins[i].classList.add('hidden');
+      window.util.filteredPins[i].removeEventListener('click', window.display.onMapPin);
+      window.util.filteredPins[i].classList.add('hidden');
     }
 
     window.selectors.reset();
@@ -70,17 +75,18 @@
     }
   });
 
-  window.page = {
-    activate: activatePage,
-    deactivate: deactivatePage
-  };
-
   window.util.error.classList.add('hidden');
-  document.body.insertAdjacentElement('afterbegin',
+  document.querySelector('main').insertAdjacentElement('afterbegin',
       window.util.error);
 
   window.util.success.classList.add('hidden');
-  document.body.insertAdjacentElement('afterbegin',
+  document.querySelector('main').insertAdjacentElement('afterbegin',
       window.util.success);
+
+  window.page = {
+    activate: activatePage,
+    deactivate: deactivatePage,
+    closeCard: cardClose
+  };
 
 })();

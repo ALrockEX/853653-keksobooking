@@ -2,20 +2,20 @@
 (function () {
 
   var URL = 'https://js.dump.academy/keksobooking';
-  var statusOK = 200;
-  var timeoutLoad = 10000;
-  var timeoutSave = 10000;
+  var STATUS_OK = 200;
+  var TIMEOUT_LOAD = 10000;
+  var TIMEOUT_SAVE = 10000;
   var timeoutMessageLoad = 'Запрос не успел выполниться';
   var timeoutMessageSave = 'Отправка данных не успела выполниться';
 
   var backendLoad = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.timeout = timeoutLoad;
+    xhr.timeout = TIMEOUT_LOAD;
 
     xhr.addEventListener('load', function () {
       switch (xhr.status) {
-        case statusOK:
+        case STATUS_OK:
           onLoad(xhr.response);
           break;
         default:
@@ -38,13 +38,13 @@
   var backendSave = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.timeout = timeoutSave;
+    xhr.timeout = TIMEOUT_SAVE;
     if (!data.has('address')) {
       data.append('address', window.util.formSetAddress.value);
     }
     xhr.addEventListener('load', function () {
       switch (xhr.status) {
-        case statusOK:
+        case STATUS_OK:
           onLoad();
           break;
         default:

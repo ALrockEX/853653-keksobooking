@@ -1,29 +1,30 @@
 'use strict';
 (function () {
-
+  var LENGTH_SIMILARS = 5;
   var pinTemplate = document.querySelector('#pin')
       .content
       .querySelector('.map__pin');
 
-  var renderMapPin = function (pin) {
-    if (pin.offer !== null) {
+  var renderMapPin = function (similar) {
+    if (similar.offer !== null) {
       var pinElement = pinTemplate.cloneNode(true);
       var pinImage = pinElement.getElementsByTagName('img')[0];
       var pinWidth = pinImage.width;
       var pinHeight = pinImage.height;
 
       pinElement.style =
-          'left: ' + (pin.location.x + pinWidth / 2) +
-          'px; top: ' + (pin.location.y + pinHeight) + 'px;';
-      pinImage.src = pin.author.avatar;
-      pinImage.alt = pin.offer.title;
+          'left: ' + (similar.location.x - pinWidth / 2) +
+          'px; top: ' + (similar.location.y - pinHeight) + 'px;';
+      pinImage.src = similar.author.avatar;
+      pinImage.alt = similar.offer.title;
       return pinElement;
     }
     return null;
   };
   var renderMapPins = function (similars) {
     var pins = [];
-    for (var i = 0; i < similars.length; i++) {
+    for (var i = 0; i < Math.min(similars.length,
+        LENGTH_SIMILARS); i++) {
       pins[i] = renderMapPin(similars[i]);
     }
     return pins;
@@ -95,7 +96,8 @@
 
   var renderCards = function (similars) {
     var cards = [];
-    for (var i = 0; i < similars.length; i++) {
+    for (var i = 0; i < Math.min(similars.length,
+        LENGTH_SIMILARS); i++) {
       cards[i] = renderCard(similars[i]);
     }
     return cards;
