@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var MAIN_PIN_INDEX = 1;
 
   var onMapPinClick = function () {
     if (window.util.indexOpen !== undefined) {
@@ -26,13 +27,15 @@
 
   var displayUpdate = function () {
     var oldCard;
-    for (var i = window.util.pinsListElement.children.length - 1; i > 1; i--) {
+    for (var i = window.util.pinsListElement.children.length - 1;
+      i > MAIN_PIN_INDEX; i--) {
       window.util.pinsListElement
           .removeChild(window.util.pinsListElement.children[i]);
     }
     for (i = 0; i < window.util.mapPins.length; i++) {
       window.util.fragmentPins.appendChild(window.util.mapPins[i]);
       window.util.fragmentCards.appendChild(window.util.cards[i]);
+      window.util.mapPins[i].addEventListener('click', onMapPinClick);
       oldCard = window.util.map
           .querySelectorAll('.map__card')[window.util.mapPins.length - 1 - i];
       if (oldCard) {
@@ -42,10 +45,6 @@
     window.util.pinsListElement.appendChild(window.util.fragmentPins);
     window.util.map.insertBefore(window.util.fragmentCards,
         window.util.map.querySelector('.map__filters-container'));
-
-    for (i = 0; i < window.util.mapPins.length; i++) {
-      window.util.mapPins[i].addEventListener('click', onMapPinClick);
-    }
   };
 
   window.display = {

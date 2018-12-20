@@ -17,7 +17,7 @@
     return selector.options[selector.selectedIndex].value;
   };
 
-  var ascToReturn = function (similarValue, selectedValue) {
+  var getReturn = function (similarValue, selectedValue) {
     if (selectedValue !== 'any') {
       if (Number.isInteger(similarValue)) {
         return similarValue === parseInt(selectedValue, 10);
@@ -49,15 +49,15 @@
   var updatePins = function () {
     var filtered = window.util.announcements.filter(function (similar) {
       window.util.selectedType = getValue(window.util.filterType);
-      return ascToReturn(similar.offer.type, window.util.selectedType);
+      return getReturn(similar.offer.type, window.util.selectedType);
 
     }).filter(function (similar) {
       window.util.selectedRooms = getValue(window.util.filterRooms);
-      return ascToReturn(similar.offer.rooms, window.util.selectedRooms);
+      return getReturn(similar.offer.rooms, window.util.selectedRooms);
 
     }).filter(function (similar) {
       window.util.selectedGuests = getValue(window.util.filterGuests);
-      return ascToReturn(similar.offer.guests, window.util.selectedGuests);
+      return getReturn(similar.offer.guests, window.util.selectedGuests);
 
     }).filter(function (similar) {
       window.util.selectedPrice = getValue(window.util.filterPrice);
