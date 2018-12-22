@@ -21,14 +21,18 @@
     selector.options[index].selected = true;
   };
 
+  var resetFeatures = function (checkBoxes) {
+    for (var i = 0; i < checkBoxes.length; i++) {
+      checkBoxes[i].checked = false;
+    }
+  };
+
   var resetForm = function () {
     for (var i = 0; i < window.util.formInputs.length; i++) {
       window.util.formInputs[i].value = '';
     }
 
-    for (i = 0; i < features.length; i++) {
-      features[i].checked = false;
-    }
+    resetFeatures(features);
 
     description.value = '';
 
@@ -89,12 +93,13 @@
       window.backend.save(new FormData(window.util.form),
           window.request.onSave,
           window.request.onError);
-
     }
   });
 
   window.selectors = {
-    reset: resetForm
+    reset: resetForm,
+    selectChoose: chooseSelect,
+    featuresReset: resetFeatures
   };
 
 })();
