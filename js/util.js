@@ -2,6 +2,8 @@
 (function () {
   var PIN_MIN_Y = 130;
   var PIN_MAX_Y = 630;
+  var ESC_KEYCODE = 27;
+
   var mapUtil = document.querySelector('.map');
   var cardTemplate = document.querySelector('#card')
       .content
@@ -23,6 +25,7 @@
     form: formUtil,
     pinMinY: PIN_MIN_Y,
     pinMaxY: PIN_MAX_Y,
+    esc: ESC_KEYCODE,
     dragged: false,
     resetted: false,
     allValid: true,

@@ -5,9 +5,9 @@
   var pinMainFirstY = window.util.pinMain.offsetTop;
   var formReset = window.util.form.querySelector('.ad-form__reset');
 
-  var cardClose = function () {
+  var closeCard = function () {
     if (window.util.indexOpen !== undefined) {
-      window.display.onCardCloser();
+      window.display.cardClose();
       window.util.indexOpen = undefined;
     }
   };
@@ -41,7 +41,7 @@
     window.util.setDisableToElements(window.util.previosDisabledForms);
     window.util.setDisableToElements(window.util.mapFilters);
     window.util.map.classList.add('map--faded');
-    cardClose();
+    closeCard();
     window.util.form.removeAttribute('style');
     window.util.dragged = false;
     window.util.resetted = true;
@@ -81,7 +81,7 @@
   };
 
   var onFilterChange = window.debounce(function () {
-    window.page.closeCard();
+    closeCard();
     window.similars.update();
   });
 
@@ -99,7 +99,6 @@
   window.page = {
     activate: activatePage,
     deactivate: deactivatePage,
-    closeCard: cardClose
   };
 
 })();

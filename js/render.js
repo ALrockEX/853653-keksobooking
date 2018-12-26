@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var LENGTH_SIMILARS = 5;
+  var fragmentPhotos = document.createDocumentFragment();
   var pinTemplate = document.querySelector('#pin')
       .content
       .querySelector('.map__pin');
@@ -83,8 +84,10 @@
       for (i = 1; i < similar.offer.photos.length; i++) {
         photo = photoList.children[0].cloneNode(true);
         photo.src = similar.offer.photos[i];
-        photoList.appendChild(photo);
+        fragmentPhotos.appendChild(photo);
       }
+      photoList.appendChild(fragmentPhotos);
+
       cardElement.querySelector('.popup__avatar').src =
           similar.author.avatar;
       cardElement.classList.add('hidden');

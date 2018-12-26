@@ -14,15 +14,29 @@
         window.util.cards[i].classList.remove('hidden');
         window.util.cards[i].querySelector('.popup__close')
           .addEventListener('click', onCardCloserClick);
+        window.util.cards[i].querySelector('.popup__close')
+          .addEventListener('keydown', onCardCloserKeydown);
         window.util.indexOpen = i;
       }
     }
   };
 
-  var onCardCloserClick = function () {
+  var closeCard = function () {
     window.util.cards[window.util.indexOpen].classList.add('hidden');
     window.util.cards[window.util.indexOpen].querySelector('.popup__close')
         .removeEventListener('click', onCardCloserClick);
+    window.util.cards[window.util.indexOpen].querySelector('.popup__close')
+        .removeEventListener('keydown', onCardCloserKeydown);
+  };
+
+  var onCardCloserKeydown = function (evt) {
+    if (evt.keyCode === window.util.esc) {
+      closeCard();
+    }
+  };
+
+  var onCardCloserClick = function () {
+    closeCard();
   };
 
   var displayUpdate = function () {
@@ -49,7 +63,7 @@
 
   window.display = {
     onMapPin: onMapPinClick,
-    onCardCloser: onCardCloserClick,
+    cardClose: closeCard,
     update: displayUpdate
   };
 

@@ -1,8 +1,6 @@
 'use strict';
 (function () {
 
-  var ESC_KEYCODE = 27;
-
   var removeMessages = function () {
     window.util.error.classList.add('hidden');
     window.util.success.classList.add('hidden');
@@ -15,7 +13,7 @@
   };
 
   var onDocumentKeydown = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.util.esc) {
       removeMessages();
     }
   };
